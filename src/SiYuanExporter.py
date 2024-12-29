@@ -2,6 +2,7 @@
 import requests
 import json
 import os
+import zipfile
 
 
 
@@ -59,4 +60,17 @@ class SiYuanExporter:
     zip_path = data["data"]["zip"]
     url = self._base_url + zip_path
     self._download_file(url, file_name, directory)
+
+  def export_notebook_markdowns(self, notebook_id, file_name = "notebook.zip", directory = None):
+    self.export_notebook_markdown_zip(notebook_id, file_name, directory)
+    if directory is None:
+      directory = os.getcwd()
+    os.makedirs(directory, exist_ok=True)
+    file_name = os.path.join(directory, file_name)
+    with zipfile.ZipFile(file_name, 'r') as zip_ref:
+      zip_ref.extractall(directory)
+      print(f"File {file_name} extracted successfully")
+    os.remove(file_name)
+
+
 

@@ -45,11 +45,16 @@ class SiYuanExportWindow(QWidget):
     self._layout.addWidget(directory_button)
   
   def _set_export_button(self):
-    export_button = QPushButton("Export Notebook Markdown Zip")
+    export_zip_button = QPushButton("Export Notebook Markdown Zip")
     def export_notebook_markdown_zip():
       self._exporter.export_notebook_markdown_zip(self._notebook_id, f"{self._notebook_name}.zip", self._directory_path)
-    export_button.clicked.connect(export_notebook_markdown_zip)
-    self._layout.addWidget(export_button)
+    export_zip_button.clicked.connect(export_notebook_markdown_zip)
+    self._layout.addWidget(export_zip_button)
+    export_markdowns_button = QPushButton("Export Notebook Markdowns")
+    def export_notebook_markdowns():
+      self._exporter.export_notebook_markdowns(self._notebook_id, f"{self._notebook_name}.zip", self._directory_path)
+    export_markdowns_button.clicked.connect(export_notebook_markdowns)
+    self._layout.addWidget(export_markdowns_button)
 
 
 
