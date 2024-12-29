@@ -3,6 +3,7 @@ import requests
 import json
 import os
 import zipfile
+import shutil
 
 
 
@@ -66,11 +67,19 @@ class SiYuanExporter:
     if directory is None:
       directory = os.getcwd()
     os.makedirs(directory, exist_ok=True)
+    file_base_name = os.path.splitext(os.path.basename(file_name))[0]
     file_name = os.path.join(directory, file_name)
+    sub_dir = os.path.join(directory, file_base_name)
+    os.makedirs(sub_dir, exist_ok=True)
     with zipfile.ZipFile(file_name, 'r') as zip_ref:
-      zip_ref.extractall(directory)
-      print(f"File {file_name} extracted successfully")
+      zip_ref.extractall(sub_dir)
+      print(f"File {file_name} extracted successfully to {sub_dir}")
     os.remove(file_name)
+    for root, dirs, files in os.walk(sub_dir):
+      for file in files:
+        file_path = os.path.join(root, file)
+        shutil.move(file_path, directory)
+    shutil.rmtree(sub_dir)
 
 
 
