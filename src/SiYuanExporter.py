@@ -91,6 +91,10 @@ class SiYuanExporter:
   def HPaths(self):
     return self._HPaths
 
+  @property
+  def ID2HPath(self):
+    return self._ID2HPath
+
   def list_notebook(self):
     url = self._api_base_url + "/notebook/lsNotebooks"
     response = requests.post(url, headers=self._headers)

@@ -65,6 +65,7 @@ class SiYuanExportWindow(QWidget):
     def export_mdbook():
       self._exporter.export_notebook_markdowns(self._directory_path)
       self._mdbook_exporter.write_summary(self._directory_path, self._exporter.HPaths)
+      self._mdbook_exporter.convert_link(self._directory_path, self._exporter.HPaths, self._exporter.ID2HPath)
     export_mdbook_button.clicked.connect(export_mdbook)
     self._layout.addWidget(export_mdbook_button)
 
