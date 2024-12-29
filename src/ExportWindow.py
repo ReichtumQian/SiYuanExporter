@@ -25,11 +25,9 @@ class SiYuanExportWindow(QWidget):
     for i in range(len(notebook_ids)):
       notebook_combo.addItem(notebook_names[i])
     self._layout.addWidget(notebook_combo)
-    self._notebook_id = notebook_ids[0]
-    self._notebook_name = notebook_names[0]
+    self._exporter.set_notebook(notebook_ids[0], notebook_names[0])
     def on_notebook_changed(value):
-      self._notebook_id = notebook_ids[value]
-      self._notebook_name = notebook_names[value]
+      self._exporter.set_notebook(notebook_ids[value], notebook_names[value])
     notebook_combo.currentIndexChanged.connect(on_notebook_changed)
   
   def _set_export_path(self):
@@ -45,18 +43,20 @@ class SiYuanExportWindow(QWidget):
     self._layout.addWidget(directory_button)
   
   def _set_export_button(self):
+
+    # export zip file
     export_zip_button = QPushButton("Export Notebook Markdown Zip")
     def export_notebook_markdown_zip():
-      self._exporter.export_notebook_markdown_zip(self._notebook_id, f"{self._notebook_name}.zip", self._directory_path)
+      self._exporter.export_notebook_markdown_zip(self._directory_path)
     export_zip_button.clicked.connect(export_notebook_markdown_zip)
     self._layout.addWidget(export_zip_button)
+
+    # export markdowns
     export_markdowns_button = QPushButton("Export Notebook Markdowns")
     def export_notebook_markdowns():
-      self._exporter.export_notebook_markdowns(self._notebook_id, f"{self._notebook_name}.zip", self._directory_path)
+      self._exporter.export_notebook_markdowns(self._directory_path)
     export_markdowns_button.clicked.connect(export_notebook_markdowns)
     self._layout.addWidget(export_markdowns_button)
-
-
 
 
 
