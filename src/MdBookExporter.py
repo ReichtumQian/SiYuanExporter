@@ -12,7 +12,7 @@ class MdBookExporter:
         name = os.path.basename(HPath)
         levels = len(HPath.split('/')) - 2
         tabs = '\t' * levels
-        f.write(f'{tabs}- [{name}](.{HPath}).md\n')
+        f.write(f'{tabs}- [{name}](.{HPath}.md)\n')
 
 
 
