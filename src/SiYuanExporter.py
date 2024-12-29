@@ -44,37 +44,39 @@ class SiYuanExporter:
       print(f":Download failed with status code {response.status_code}")
     
   def _init_IDs(self):
-    def append_files(ab_path, rel_path, files):
-      url = self._api_base_url + "/file/readDir"
-      response = requests.post(url, headers=self._headers, json={"path": ab_path})
+    url = self._api_base_url + "/filetree/listDocsByPath"
+    def _init_IDs_helper(path):
+      # if depth != 0:
+      #   sy_path = path + ".sy"
+      response = requests.post(url, headers=self._headers, json={"notebook": self._notebook_id, "path" : path})
       data = self._check_request(response)
-      num_files = len(data["data"])
-      for i in range(num_files):
-        file_name = data["data"][i]["name"]
-        is_dir = data["data"][i]["isDir"]
-        if file_name == ".siyuan":
-          continue
-        if is_dir:
-          append_files(ab_path + file_name + "/", rel_path + file_name + "/",
-      files)
-          continue
-        files.append(rel_path + file_name)
-    append_files(self._notebook_path, "/", self._IDs)
+      files = data["data"]["files"]
+      for file in files:
+        self._IDs.append(file["id"])
+        if file["subFileCount"] > 0:
+          # if depth != 0:
+            # path = path + "/"
+          _init_IDs_helper(path + file["id"] + "/")
+    _init_IDs_helper("/")
+        
 
   def _init_ID2HPath(self):
-    url = self._api_base_url + "/filetree/getHPathByPath"
+    url = self._api_base_url + "/filetree/getHPathByID"
     for i in range(len(self._IDs)):
-      response = requests.post(url, headers=self._headers, json={"notebook" : self._notebook_id, "path": self._IDs[i]})
+      response = requests.post(url, headers=self._headers, json={"id": self._IDs[i]})
       data = self._check_request(response)
+      if data["data"] is None:
+        assert False, "HPath not found for ID " + self._IDs[i]
+      self._HPaths.append(data["data"])
       self._ID2HPath[self._IDs[i]] = data["data"]
   
   def set_notebook(self, notebook_id, notebook_name):
     self._notebook_id = notebook_id
     self._notebook_name = notebook_name
-    self._notebook_path = "/data/" + notebook_id + "/"
     self._IDs = []
     self._init_IDs()
     self._ID2HPath = {}
+    self._HPaths = []
     self._init_ID2HPath()
     
   @property
@@ -84,6 +86,10 @@ class SiYuanExporter:
   @property
   def notebook_name(self):
     return self._notebook_name
+  
+  @property
+  def HPaths(self):
+    return self._HPaths
 
   def list_notebook(self):
     url = self._api_base_url + "/notebook/lsNotebooks"
