@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QComboBox, QPushButton, QFileDialog
 from SiYuanExporter import *
-from MdBookExporter import *
+from MdBookConverter import *
 
 
 class SiYuanExportWindow(QWidget):
@@ -14,7 +14,6 @@ class SiYuanExportWindow(QWidget):
     self._set_notebook_selection(*self._exporter.list_notebook())
     self._set_export_path()
     self._set_export_button()
-    self._mdbook_exporter = MdBookExporter()
 
   def show(self, w=400, h=300):
     super().setLayout(self._layout)
@@ -74,12 +73,8 @@ class SiYuanExportWindow(QWidget):
     export_mdbook_button = QPushButton("Export to Mdbook")
 
     def export_mdbook():
-      self._exporter.export_notebook_markdowns(self._directory_path)
-      self._mdbook_exporter.write_summary(self._directory_path,
-                                          self._exporter.HPaths)
-      self._mdbook_exporter.convert_link(self._directory_path,
-                                         self._exporter.HPaths,
-                                         self._exporter.ID2HPath)
+      mdbook_converter = MdBookConverter()
+      self._exporter.export(mdbook_converter, self._directory_path)
 
     export_mdbook_button.clicked.connect(export_mdbook)
     self._layout.addWidget(export_mdbook_button)

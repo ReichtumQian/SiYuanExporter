@@ -121,6 +121,14 @@ class SiYuanExporter:
       print(f"File {file_name} extracted successfully to {directory}")
     os.remove(file_name)
 
+  def export(self, converter, directory=None):
+    if directory is None:
+      directory = os.getcwd()
+    os.makedirs(directory, exist_ok=True)
+    self.export_notebook_markdowns(directory)
+    converter.setup(directory, self._HPaths)
+    converter.convert(directory, self._HPaths, self._ID2HPath)
+
   @property
   def notebook_id(self):
     return self._notebook_id
