@@ -13,5 +13,9 @@ class MdBookConverter(BaseConverter):
         name = os.path.basename(HPath)
         levels = len(HPath.split('/')) - 2
         tabs = '\t' * levels
-        encoded_path = quote(HPath)
+        # deal with some special characters
+        encoded_path = HPath
+        encoded_path = encoded_path.replace(' ', '%20')
+        encoded_path = encoded_path.replace('：', '%20')
+        # encoded_path = quote(HPath)
         f.write(f'{tabs}- [{name}](.{encoded_path}.md)\n')
