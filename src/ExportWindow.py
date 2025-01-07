@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QComboBox, QPushButton, QFileDialog
 from SiYuanExporter import *
 from MdBookConverter import *
+from MkdocsConverter import *
 
 
 class SiYuanExportWindow(QWidget):
@@ -78,6 +79,16 @@ class SiYuanExportWindow(QWidget):
 
     export_mdbook_button.clicked.connect(export_mdbook)
     self._layout.addWidget(export_mdbook_button)
+
+    # export to mkdocs
+    export_mkdocs_button = QPushButton("Export to Mkdocs")
+
+    def export_mkdocs():
+      mkdocs_converter = MkdocsConverter()
+      self._exporter.export(mkdocs_converter, self._directory_path)
+
+    export_mkdocs_button.clicked.connect(export_mkdocs)
+    self._layout.addWidget(export_mkdocs_button)
 
 
 if __name__ == '__main__':

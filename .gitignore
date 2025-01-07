@@ -1,4 +1,8 @@
 .venv/
 test/
+build/
+dist/
+*.spec
+*.exe
 *.pyc
 config.json
